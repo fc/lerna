@@ -109,6 +109,11 @@ export default class PublishCommand extends Command {
     }
 
     if (this.flags.skipNpm) {
+      if (this.gitEnabled) {
+        this.logger.info("Pushing tags to git...");
+        this.logger.newLine();
+        GitUtilities.pushWithTags(this.getOptions().gitRemote || "origin", this.tags);
+      }
       callback(null, true);
     } else {
       this.publishPackagesToNpm(callback);
@@ -536,3 +541,4 @@ export default class PublishCommand extends Command {
     return npmTag || (canary && "canary") || "latest";
   }
 }
+
